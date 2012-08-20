@@ -5,15 +5,14 @@ require 'uglifier'
 require 'jasmine-headless-webkit'
 require 'listen'
 
+
 COFFEE_SRC = FileList['src/*.coffee']
-COFFEE_DEST = COFFEE_SRC.pathmap "build/%n.js"
+COFFEE_DEST = COFFEE_SRC.pathmap "/tmp/%n.js"
 JAVASCRIPT_SRC = FileList['src/*.js']
-JAVASCRIPT_DEST = JAVASCRIPT_SRC.pathmap "build/%n.js"
+JAVASCRIPT_DEST = JAVASCRIPT_SRC.pathmap "/tmp/%n.js"
 DEST = 'react.min.js'
 
 task :default => [DEST]
-
-directory "build"
 
 COFFEE_DEST.each do |jsfile|
   srcfile = File.join('src', File.basename(jsfile).ext('.coffee'))

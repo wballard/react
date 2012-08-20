@@ -1,6 +1,6 @@
 src_files:
   - lib/*.js
-  - binder.min.js
+  - react.min.js
 helpers:
   - ./helpers/*.coffee
 spec_files:
