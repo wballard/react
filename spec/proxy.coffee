@@ -29,14 +29,14 @@ describe 'object proxy', ->
     it 'changes an object into a proxy', ->
         x =
             a: 1
-        y = binder.proxyObject x
+        y = proxyObject x
         expect(y).toBe(x)
 
     it 'proxies an object with scalar properties', ->
         x =
             a: 1
             b: 2
-        binder.proxyObject x, intercept_before, intercept_after
+        proxyObject x, intercept_before, intercept_after
         x.a = 11
         x.b = 22
         expect(before).toEqual [
@@ -51,7 +51,7 @@ describe 'object proxy', ->
     it 'proxies into an object with array properties', ->
         x = 
             a: []
-        binder.proxyObject x, intercept_before, intercept_after
+        proxyObject x, intercept_before, intercept_after
 
         x.a.push 1
         x.a.push 2
@@ -93,7 +93,7 @@ describe 'object proxy', ->
             a:
                 b: ''
 
-        binder.proxyObject x, intercept_before, intercept_after
+        proxyObject x, intercept_before, intercept_after
 
         x.a.b = 1
         expect(before).toEqual [
@@ -107,7 +107,7 @@ describe 'object proxy', ->
         x =
             a: null
 
-        binder.proxyObject x, intercept_before, intercept_after
+        proxyObject x, intercept_before, intercept_after
         x.a = {b: ''}
         expect(x.a).toEqual {b: ''}
         expect(x.a).toBeProxied()
@@ -124,8 +124,8 @@ describe 'object proxy', ->
     it 'will not double proxy', ->
         x =
             a: null
-        binder.proxyObject x, intercept_before, intercept_after
-        binder.proxyObject x, intercept_before, intercept_after
+        proxyObject x, intercept_before, intercept_after
+        proxyObject x, intercept_before, intercept_after
         expect(x.__proxied__).toEqual true
         x.a = 1
         expect(before).toEqual [
@@ -138,7 +138,7 @@ describe 'object proxy', ->
     it 'will proxy objects added to proxied arrays', ->
         x =
             a: []
-        binder.proxyObject x, intercept_before, intercept_after
+        proxyObject x, intercept_before, intercept_after
 
         x.a.push
             b: 1
@@ -157,17 +157,19 @@ describe 'object proxy', ->
         x =
             a:
                 b: 1
+            c: 'a'
         parent = null
-        binder.proxyObject x, (_, __, ___, options) ->
-            parent = options.parent
+        proxyObject x, (_, __, ___, options, parents) ->
+            parent = parents[0]
+        #note we are two deep here
         x.a.b = 2
+        expect(parent).toBe x.a
+        #note we are one deep here
+        x.c = 'b'
         expect(parent).toBe x
 
     it 'forgives you if you forget callbacks', ->
         x =
             a: 1
-        expect((-> binder.proxyObject x)).not.toThrow()
+        expect((-> proxyObject x)).not.toThrow()
         expect((-> x.a = 2)).not.toThrow()
-
-
-

@@ -2,21 +2,22 @@
 React is a jQuery plugin, and stand along JavaScript library that allows
 you to use aspect oriented programming techniques to *react* to changes
 of JavaScript objects. This lets you do event driven programming on pure
-objects, similar to the DOM.
+objects, similar to the DOM, creating reactive data.
 
 React works without base classes or changes to the JavaScript object
 model, in the simplest case you simply hook up to any object variable,
-such as an object returned from a JSON REST service.
+such as an object returned from a JSON REST service. This sets it apart
+from other data binding or event libraries.
 
 ~~~
 var x = {
   a: 'Hello',
   b: 'World'
 }
-$(x).react.before(function(object, attribute, value){})
-$(x).react.after(function(object, attribute, value){})
+$(x).react('before', function(object, attribute, value){})
+$(x).react('after', function(object, attribute, value){})
 //Unhook all callbacks
-$(x).react.off()
+$(x).react('off')
 ~~~
 
 ## Bubbling ##
@@ -59,6 +60,9 @@ window.react(x).before(function(object, attribute, value){})
 ~~~
 
 # Limitations #
+React only works on attributes, whether string, object, number, or
+array, not on functions inside objects.
+
 Given that __noSuchMethod__ is not yet standard, there isn't yet a very
 portable way to react to adding a property, so if you dynamically expand
 an object, you need to react to it again. There is a shorthand for this

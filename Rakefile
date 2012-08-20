@@ -52,10 +52,7 @@ task :test => [DEST, :jasmine_headless] do |to|
 end
 
 task :watch do
-  Listen.to 'src' do
-    system 'rake test'
-  end
-  Listen.to 'spec' do
+  Listen.to 'src', 'spec' do
     system 'rake test'
   end
 end

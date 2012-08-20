@@ -12,8 +12,7 @@ You can use this standalone, separate from the rest of binder.
 @private
 List of methods on Array that mutate it in place.
 ###
-array_mutators = ['push', 'unshift', 'pop',
-    'shift', 'reverse', 'sort', 'splice']
+array_mutators = ['push', 'unshift', 'pop', 'shift', 'reverse', 'sort', 'splice']
 
 ###
 @function
@@ -31,16 +30,18 @@ The before and after callbacks are of the form
 (object, property, value, options)
 allowing you to have some context on where a named property changed.
 ###
-proxyObject = (object, before, after, options) ->
+proxyObject = (object, before, after, options, parents) ->
     if not object
         return null
     if typeof(object) != 'object'
         return object
     if object?.__proxied__
         return object
-    before = before or (p, o, n, v) ->
-    after = after or (p, o, n, v) ->
+    before = before or () ->
+    after = after or () ->
     options = options or {}
+    parents = parents?.slice(0) or [this]
+    parents.unshift object
 
     #Define a handler closure for this object being proxied
     #to be used from watch. This is the interception point that
@@ -48,10 +49,9 @@ proxyObject = (object, before, after, options) ->
     handler = (property, before_value, after_value) ->
         #objects need to be proxied when added to an object
         if typeof(after_value) == 'object'
-            proxyObject after_value, before, after,
-                parent: object
-        before object, property, before_value, options
-        after object, property, after_value, options
+            proxyObject after_value, before, after, options, parents
+        before object, property, before_value, options, parents
+        after object, property, after_value, options, parents
         after_value
 
     #every enumerable property will be proxied
@@ -62,17 +62,15 @@ proxyObject = (object, before, after, options) ->
                 (->
                     prior = value[mutator]
                     value[mutator] = ->
-                        before object, name, value
+                        before object, name, value, options, parents
                         ret = prior.apply value, arguments
                         for argument in arguments
                             #parent is the array, not the containing object
-                            proxyObject argument, before, after,
-                                parent: value
-                        after object, name, value
+                            proxyObject argument, before, after, options, parents
+                        after object, name, value, options, parents
                         ret)()
         #recursive proxy
-        value = proxyObject value, before, after,
-            parent: object
+        value = proxyObject value, before, after, options, parents
         #watch every property to call our function
         object.watch name, handler
 
@@ -90,4 +88,4 @@ if module? and module?.exports
     root = module.exports
 if not root?.binder
     root.binder = {}
-root.binder.proxyObject = proxyObject
+root.proxyObject = proxyObject
