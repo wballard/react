@@ -1,0 +1,12 @@
+src_files:
+  - lib/*.js
+  - binder.min.js
+helpers:
+  - ./helpers/*.coffee
+spec_files:
+  - ./*.coffee
+helper_dir: .
+spec_dir: spec
+src_dir: .
+runner_output: ./runner.html
+
