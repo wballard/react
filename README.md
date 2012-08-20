@@ -32,8 +32,8 @@ var deep = {
     a: 'Hello'
   }
 }
-$(deep).react.before(function(object, attribute, value){})
-$(deep.nested).react.before(function(object, attribute, value){})
+$(deep).react('before', function(object, attribute, value){})
+$(deep.nested).react('before', function(object, attribute, value){})
 deep.nested.a = 'Hello World' //fires both callbacks above, deep.nested first
 ~~~
 

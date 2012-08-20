@@ -18,7 +18,6 @@ describe 'react', ->
             property: 'a'
             value: 'Hello'
 
-
     it 'hooks into properties after they are set', ->
         check = null
         x =
@@ -34,5 +33,17 @@ describe 'react', ->
             property: 'a'
             value: 'Hello World'
 
+    it 'can be turned off', ->
+        check = []
+        x =
+            a: 'Hello'
+        $(x).react 'before after', (object, property, value) ->
+            check.push
+                object: object
+                property: property
+                value: value
+        $(x).react 'off'
+        x.a = 'Hello World'
+        expect(check).toEqual []
 
 #can I hook a proxy to window and get all data?
