@@ -46,4 +46,19 @@ describe 'react', ->
         x.a = 'Hello World'
         expect(check).toEqual []
 
+    it 'bubbles up an object graph', ->
+        deep =
+            nested:
+                a: 'Hello'
+        check = []
+        $(deep).react 'after', (object, property, value) ->
+            check.push [object, property, value]
+        $(deep.nested).react 'after', (object, property, value) ->
+            check.push [object, property, value]
+        deep.nested.a = 'Hello World'
+        expect(check).toEqual [
+            [deep.nested, 'a', 'Hello World'],
+            [deep.nested, 'a', 'Hello World'],
+        ]
+
 #can I hook a proxy to window and get all data?
