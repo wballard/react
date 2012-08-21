@@ -61,4 +61,28 @@ describe 'react', ->
             [deep.nested, 'a', 'Hello World'],
         ]
 
+    it 'understands arrays', ->
+        x =
+            a: []
+        check = []
+        $(x).react 'after', (object, property, value) ->
+            check.push [object, property, value]
+        x.a.push 'Hi'
+        expect(check).toEqual [
+            [x, 'a', ['Hi']]
+        ]
+
+    it 'understands objects in arrays', ->
+        x =
+            a: []
+        check = []
+        $(x).react 'after', (object, property, value) ->
+            check.push [object, property, value]
+        x.a.push
+            m: 'Hello'
+        x.a[0].m = 'Hello World'
+        expect(check).toEqual [
+            [x, 'a', x.a]
+            [x.a[0], 'm', 'Hello World']
+        ]
 #can I hook a proxy to window and get all data?
