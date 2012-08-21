@@ -43,20 +43,11 @@ object. This lets you do pure event driven programming on pure data.
 
 ~~~
 //Continuing the idea from above...
-$(x).react.on() //turn on events, but no specific callbacks wired
+$(x).react('on') //turn on events, but no specific callbacks wired
 $(window).on('react-before', function(object, attribute, value){})
 $(window).on('react-after', function(object, attribute, value){})
 x.a = 'Hola'
 //This will call your event handler with (x, 'a', 'Hola')
-~~~
-
-# Without jQuery #
-React understands jQuery, but also works in just plain JavaScript by
-hooking onto the root `this`, typically `window`, as well as via
-CommonJS. Usage is a bit different.
-
-~~~
-window.react(x).before(function(object, attribute, value){})
 ~~~
 
 # Limitations #
@@ -66,12 +57,12 @@ array, not on functions inside objects.
 Given that __noSuchMethod__ is not yet standard, there isn't yet a very
 portable way to react to adding a property, so if you dynamically expand
 an object, you need to react to it again. There is a shorthand for this
-so you don't need ot rebind all your event handlers.
+so you don't need to rebind all your event handlers.
 
 ~~~
 //Continuing the example...
 x.c = 'Stuff!' //dynamically added property
-$(x).react.again()
+$(x).react() //refresh any proxying
 ~~~ 
 
 # Requirements #

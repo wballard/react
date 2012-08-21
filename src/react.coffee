@@ -26,6 +26,7 @@ $.fn.react = (action, callback) ->
         if not el.__react__
             Object.defineProperty el, '__react__',
                 enumerable: false
+                configurable: true
                 value:
                     before: jQuery.Callbacks('unique stopOnFalse')
                     after: jQuery.Callbacks('unique stopOnFalse')
@@ -33,8 +34,7 @@ $.fn.react = (action, callback) ->
             if action is 'off'
                 #all the bindings are just deleted
                 if el.__react__
-                    el.__react__.before = jQuery.Callbacks('unique stopOnFalse')
-                    el.__react__.after = jQuery.Callbacks('unique stopOnFalse')
+                    delete el.__react__
             else
                 el.__react__[action].add callback
         #each object needs to be proxied to provide a callback hookup
