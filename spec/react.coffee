@@ -85,4 +85,4 @@ describe 'react', ->
             [x, 'a', x.a]
             [x.a[0], 'm', 'Hello World']
         ]
-#can I hook a proxy to window and get all data?
+

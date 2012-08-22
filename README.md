@@ -37,19 +37,6 @@ $(deep.nested).react('before', function(object, attribute, value){})
 deep.nested.a = 'Hello World' //fires both callbacks above, deep.nested first
 ~~~
 
-# Events #
-React callbacks are also jQuery events, firing data events to the window
-object. This lets you do pure event driven programming on pure data.
-
-~~~
-//Continuing the idea from above...
-$(x).react('on') //turn on events, but no specific callbacks wired
-$(window).on('react-before', function(object, attribute, value){})
-$(window).on('react-after', function(object, attribute, value){})
-x.a = 'Hola'
-//This will call your event handler with (x, 'a', 'Hola')
-~~~
-
 # Limitations #
 React only works on attributes, whether string, object, number, or
 array, not on functions inside objects.
