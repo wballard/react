@@ -86,3 +86,19 @@ describe 'react', ->
             [x.a[0], 'm', 'Hello World']
         ]
 
+    it 'will re-proxy after you add properties', ->
+        x =
+            a: 'Hi'
+        check = []
+        $(x).react 'after', (object, property, value) ->
+            check.push [object, property, value]
+        #added property
+        x.b = 'There'
+        $(x).react()
+        x.b = 'World'
+        expect(check).toEqual [
+            [x, 'b', 'World']
+        ]
+
+
+

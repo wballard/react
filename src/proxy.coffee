@@ -26,7 +26,7 @@ sets on data objects as returned via JSON.
 @param after {Function} proxy intercepts just after a write
 @returns {Object} this echoes the proxied object to allow chaining
 
-The before and after callbacks are of the form 
+The before and after callbacks are of the form
 (object, property, value, options)
 allowing you to have some context on where a named property changed.
 ###
@@ -35,8 +35,12 @@ proxyObject = (object, before, after, options, parents) ->
         return null
     if typeof(object) != 'object'
         return object
-    if object?.__proxied__
-        return object
+    if not object?.__proxied__
+        #create a guard so we can avoid double proxy, that isn't enumerable
+        #since we don't want it showing up in JSON
+        Object.defineProperty object, '__proxied__',
+            enumerable: false
+            value: {}
     before = before or () ->
     after = after or () ->
     options = options or {}
@@ -71,14 +75,11 @@ proxyObject = (object, before, after, options, parents) ->
                         ret)()
         #recursive proxy
         value = proxyObject value, before, after, options, parents
-        #watch every property to call our function
-        object.watch name, handler
+        #watch every property to call our function, but only just the once
+        if not object.__proxied__[name]
+            object.watch name, handler
+            object.__proxied__[name] = true
 
-    #create a guard so we can avoid double proxy, that isn't enumerable
-    #since we don't want it showing up in JSON
-    Object.defineProperty object, '__proxied__',
-        enumerable: false
-        value: true
     object
 
 #Export the proxy to the passed this or as a CommonJS module

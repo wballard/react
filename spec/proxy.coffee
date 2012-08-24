@@ -49,7 +49,7 @@ describe 'object proxy', ->
         ]
 
     it 'proxies into an object with array properties', ->
-        x = 
+        x =
             a: []
         proxyObject x, intercept_before, intercept_after
 
@@ -126,7 +126,7 @@ describe 'object proxy', ->
             a: null
         proxyObject x, intercept_before, intercept_after
         proxyObject x, intercept_before, intercept_after
-        expect(x.__proxied__).toEqual true
+        expect(x.__proxied__.a).toEqual true
         x.a = 1
         expect(before).toEqual [
             ['a', null],
