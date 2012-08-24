@@ -52,6 +52,13 @@ x.c = 'Stuff!' //dynamically added property
 $(x).react() //refresh any proxying
 ~~~ 
 
+## Internet Explorer 8 ##
+The 'broken' DOM only IE implementation of `Object.defineProperty` will
+need a polyfill to shim it up. Take a peek at
+[es5-shim](https://github.com/kriskowal/es5-shim). I didn't include this
+directly as you may have a different preference in polyfill, or just
+plain not need to mess with IE8 if you are making a mobile application.
+
 # Requirements #
 React's tests are built with Jasmine, and the supplied Rakefile works
 with jasmine-headless-webkit, which relies on QT in order to run. On my
