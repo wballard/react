@@ -1,8 +1,8 @@
 # React #
-React is a jQuery plugin, and stand along JavaScript library that allows
-you to use aspect oriented programming techniques to *react* to changes
-of JavaScript objects. This lets you do event driven programming on pure
-objects, similar to the DOM, creating reactive data.
+React is a jQuery plugin that allows you to use aspect oriented
+programming techniques to **react** to data changes of JavaScript
+objects. This lets you do event driven programming on pure objects,
+similar to the DOM, creating **reactive data**.
 
 React works without base classes or changes to the JavaScript object
 model, in the simplest case you simply hook up to any object variable,
@@ -14,8 +14,10 @@ var x = {
   a: 'Hello',
   b: 'World'
 }
-$(x).react('before', function(object, attribute, value){})
-$(x).react('after', function(object, attribute, value){})
+$(x).react('before', function(object, attribute, value){console.log(value)})
+$(x).react('after', function(object, attribute, value){console.log(value)})
+x.a = 'Yo'
+x.b = 'Globe'
 //Unhook all callbacks
 $(x).react('off')
 ~~~
@@ -27,14 +29,16 @@ installed react. You can also set up hierarchies so that multiple
 callbacks are fired.
 
 ~~~
-var deep = {
+var x = {
   nested: {
     a: 'Hello'
   }
 }
-$(deep).react('before', function(object, attribute, value){})
-$(deep.nested).react('before', function(object, attribute, value){})
-deep.nested.a = 'Hello World' //fires both callbacks above, deep.nested first
+$(x).react('before after', 
+    function(object, attribute, value){console.log('root', value)})
+$(x.nested).react('before after', 
+    function(object, attribute, value){console.log('nested', value)})
+x.nested.a = 'Hello World' //fires both callbacks above, deep.nested first
 ~~~
 
 # Limitations #
@@ -50,6 +54,7 @@ so you don't need to rebind all your event handlers.
 //Continuing the example...
 x.c = 'Stuff!' //dynamically added property
 $(x).react() //refresh any proxying
+x.c = 'Hot Stuff!'
 ~~~ 
 
 ## Internet Explorer 8 ##
