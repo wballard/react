@@ -45,7 +45,7 @@ x.nested.a = 'Hello World' //fires both callbacks above, deep.nested first
 React only works on attributes, whether string, object, number, or
 array, not on functions inside objects.
 
-Given that __noSuchMethod__ is not yet standard, there isn't yet a very
+Given that `Object.__noSuchMethod__` is not yet standard, there isn't yet a very
 portable way to react to adding a property, so if you dynamically expand
 an object, you need to react to it again. There is a shorthand for this
 so you don't need to rebind all your event handlers.
