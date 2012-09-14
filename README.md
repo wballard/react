@@ -1,10 +1,9 @@
 # React #
-React lets you turn JavaScript objects into reactive data.
-
-React is a jQuery plugin that allows you to use aspect oriented
-programming techniques to **react** to data changes of JavaScript
-objects. This lets you do event driven programming on pure objects,
-similar to the DOM, creating **reactive data**.
+React lets you turn JavaScript objects into reactive data with events
+`'before'` and `'after'` property sets and array mutations. These events
+bubble up a JavaScript object much like the DOM, so you can hook to the
+root of a plain data object and do event driven programming, creating
+*reactive objects*.
 
 React works without base classes or changes to the JavaScript object
 model, in the simplest case you simply hook up to any object variable,
@@ -16,19 +15,18 @@ var x = {
   a: 'Hello',
   b: 'World'
 }
-$(x).react('before', function(object, attribute, value){console.log(value)})
-$(x).react('after', function(object, attribute, value){console.log(value)})
+x.react('before', function(object, attribute, value){console.log(value)})
+x.react('after', function(object, attribute, value){console.log(value)})
 x.a = 'Yo'
 x.b = 'Globe'
 //Unhook all callbacks
-$(x).react('off')
+x.react('off')
 ~~~
 
 ## Bubbling ##
-React has a bubbling concept just like the DOM. Changes and property
-accesses deep in an object bubble up to the root where you first
-installed react. You can also set up hierarchies so that multiple
-callbacks are fired.
+React has a bubbling concept just like the DOM. Changes deep in an
+object bubble up to the root where you first installed react. You can
+also set up hierarchies so that multiple callbacks are fired.
 
 ~~~
 var x = {
@@ -36,9 +34,9 @@ var x = {
     a: 'Hello'
   }
 }
-$(x).react('before after', 
+x.react('before after', 
     function(object, attribute, value){console.log('root', value)})
-$(x.nested).react('before after', 
+x.nested.react('before after', 
     function(object, attribute, value){console.log('nested', value)})
 x.nested.a = 'Hello World' //fires both callbacks above, deep.nested first
 ~~~
@@ -55,7 +53,7 @@ so you don't need to rebind all your event handlers.
 ~~~
 //Continuing the example...
 x.c = 'Stuff!' //dynamically added property
-$(x).react() //refresh any proxying
+x.react() //refresh any proxying
 x.c = 'Hot Stuff!'
 ~~~ 
 
@@ -65,11 +63,6 @@ need a polyfill to shim it up. Take a peek at
 [es5-shim](https://github.com/kriskowal/es5-shim). I didn't include this
 directly as you may have a different preference in polyfill, or just
 plain not need to mess with IE8 if you are making a mobile application.
-
-# Requirements #
-React's tests are built with Jasmine, and the supplied Rakefile works
-with jasmine-headless-webkit, which relies on QT in order to run. On my
-Mac this is just `brew install qt`.
 
 I've coded this up in CoffeeScript, which is really just a personal
 preference, but you can just use the react.min.js in the root of the
