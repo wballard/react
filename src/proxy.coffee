@@ -90,12 +90,17 @@ proxyObject = (object, before, after, options, parents) ->
                         configurable: true
                         writeable: false
                         value: ->
+                            initial_length = array.length
                             before object, name, array, options, parents
                             ret = prior.apply array, arguments
                             for argument in arguments
                                 #parent is the array, not the containing object
                                 proxyObject argument, before, after, options, parents
                             after object, name, array, options, parents
+                            if array.length != initial_length
+                                #there are new indexes on the array, which
+                                #are really just names, so reproxy
+                                proxyObject array, before, after, options, parents
                             ret)()
         #recursive proxy
         value = proxyObject value, before, after, options, parents

@@ -94,6 +94,25 @@ describe 'object proxy', ->
             ['a', ['a','b']],
         ]
 
+    it 'proxies an array member set', ->
+        x =
+            a: [1]
+        x.proxy intercept_before, intercept_after
+
+        x.a[0] = 0
+        x.a.push 1
+        x.a[1] = 2
+        expect(before).to.eql [
+            ['0', 1],
+            ['a', [0]],
+            ['1', 1],
+        ]
+        expect(after).to.eql [
+            ['0', 0],
+            ['a', [0,1]],
+            ['1', 2],
+        ]
+
     it 'proxies nested objects properties', ->
         x =
             a:

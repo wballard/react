@@ -142,7 +142,8 @@ List of methods on Array that mutate it in place.
             configurable: true,
             writeable: false,
             value: function() {
-              var argument, ret, _j, _len1;
+              var argument, initial_length, ret, _j, _len1;
+              initial_length = array.length;
               before(object, name, array, options, parents);
               ret = prior.apply(array, arguments);
               for (_j = 0, _len1 = arguments.length; _j < _len1; _j++) {
@@ -150,6 +151,9 @@ List of methods on Array that mutate it in place.
                 proxyObject(argument, before, after, options, parents);
               }
               after(object, name, array, options, parents);
+              if (array.length !== initial_length) {
+                proxyObject(array, before, after, options, parents);
+              }
               return ret;
             }
           });
