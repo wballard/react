@@ -1,16 +1,15 @@
 ###
 @module proxy
 
-Provides the ability to wrap any object with a proxy that sets up interception
-callbacks on any property set or nested array mutation. This sets a foundation
-for aspect oriented style JavaScript.
+Provides the ability to wrap any object with a proxy that sets up
+interception callbacks on any property set or nested array mutation.
+This sets a foundation for aspect oriented style JavaScript.
 
-You can use this standalone, separate from the rest of binder.
-
-Proxied properties are tracked in __proxied__, which is made non-enumerable
-via Object.defineProperty in order to keep it out of JSON going back to your
-server, as well as showing up in normal loop iteration. Be warned that on
-IE8 that needs a Object.defineProperty polyfill, this can end up visible.
+Proxied properties are tracked in `__proxied__`, which is made
+non-enumerable via Object.defineProperty in order to keep it out of
+JSON going back to your server, as well as showing up in normal loop
+iteration. Be warned that on IE8 that needs a `Object.defineProperty`
+polyfill, this can end up visible.
 
 ###
 
@@ -18,7 +17,13 @@ IE8 that needs a Object.defineProperty polyfill, this can end up visible.
 @private
 List of methods on Array that mutate it in place.
 ###
-array_mutators = ['push', 'unshift', 'pop', 'shift', 'reverse', 'sort', 'splice']
+array_mutators = ['push',
+    'unshift',
+    'pop',
+    'shift',
+    'reverse',
+    'sort',
+    'splice']
 
 ###
 @function
@@ -27,15 +32,23 @@ Given an object, 'mangle' it by replacing all properties with a caller
 transparent proxy. The intention is that this is used to intercept property
 sets on data objects as returned via JSON.
 
-@param object {Object} this object will be proxied in place
-@param before {Function} proxy intercepts just before a write
-@param after {Function} proxy intercepts just after a write
+@param {Function} before proxy intercepts just before a write
+@param {Function} after proxy intercepts just after a write
+@param {Object} options proxy passes this along to all before/after handlers
+@param {Array} parents a 'path' of parent references, passes to all before/after handlers
 @returns {Object} this echoes the proxied object to allow chaining
 
 The before and after callbacks are of the form
-(object, property, value, options)
+(object, property, value, options, parents)
 allowing you to have some context on where a named property changed.
 ###
+Object.defineProperty Object.prototype, 'proxy',
+    enumerable: false
+    configurable: true
+    writeable: false
+    value: (before, after, options, parents) ->
+        proxyObject this, before, after, options, parents
+
 proxyObject = (object, before, after, options, parents) ->
     if not object
         return null
@@ -70,15 +83,20 @@ proxyObject = (object, before, after, options, parents) ->
         if Array.isArray value
             for mutator in array_mutators
                 (->
-                    prior = value[mutator]
-                    value[mutator] = ->
-                        before object, name, value, options, parents
-                        ret = prior.apply value, arguments
-                        for argument in arguments
-                            #parent is the array, not the containing object
-                            proxyObject argument, before, after, options, parents
-                        after object, name, value, options, parents
-                        ret)()
+                    array = value
+                    prior = array[mutator]
+                    Object.defineProperty array, mutator,
+                        enumerable: false
+                        configurable: true
+                        writeable: false
+                        value: ->
+                            before object, name, array, options, parents
+                            ret = prior.apply array, arguments
+                            for argument in arguments
+                                #parent is the array, not the containing object
+                                proxyObject argument, before, after, options, parents
+                            after object, name, array, options, parents
+                            ret)()
         #recursive proxy
         value = proxyObject value, before, after, options, parents
         #watch every property to call our function, but only just the once
@@ -87,12 +105,3 @@ proxyObject = (object, before, after, options, parents) ->
             object.__proxied__[name] = true
 
     object
-
-#Export the proxy to the passed this or as a CommonJS module
-#if that's available.
-root = this
-if module? and module?.exports
-    root = module.exports
-if not root?.binder
-    root.binder = {}
-root.proxyObject = proxyObject

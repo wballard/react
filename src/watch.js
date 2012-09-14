@@ -1,3 +1,11 @@
+/* @module watch
+ *
+ * Provides a polyfill installing the
+ * [`watch`](https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/watch)
+ * and [`unwatch`](https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/unwatch)
+ * methods as defined on MDN.
+ *
+ */
 if (!Object.prototype.watch) {
     Object.defineProperty(Object.prototype, "watch", {
         enumerable: false

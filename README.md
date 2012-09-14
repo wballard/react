@@ -1,4 +1,6 @@
 # React #
+React lets you turn JavaScript objects into reactive data.
+
 React is a jQuery plugin that allows you to use aspect oriented
 programming techniques to **react** to data changes of JavaScript
 objects. This lets you do event driven programming on pure objects,
