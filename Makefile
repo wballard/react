@@ -11,7 +11,7 @@ react.min.js: react.js
 	| uglifyjs \
 	> $@
 
-react.js: src/watch.js src/proxy.coffee
+react.js: src/watch.js src/proxy.coffee src/react.coffee
 	cat src/watch.js > $@
 	export PATH=$(XPATH); coffee --print --join $^ \
 	>> $@
