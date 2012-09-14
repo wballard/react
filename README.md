@@ -41,6 +41,19 @@ x.nested.react('before after',
 x.nested.a = 'Hello World' //fires both callbacks above, deep.nested first
 ~~~
 
+## Disabling
+React comes off nice and easy.
+~~~
+var x = {
+  nested: {
+    a: 'Hello'
+  }
+}
+x.react('before after', 
+    function(object, attribute, value){console.log('root', value)})
+x.react('off')
+~~~
+
 ## Limitations
 React only works on attributes, whether string, object, number, or
 array, not on functions inside objects.
