@@ -1,4 +1,4 @@
-# React #
+## React
 React lets you turn JavaScript objects into reactive data with events
 `'before'` and `'after'` property sets and array mutations. These events
 bubble up a JavaScript object much like the DOM, so you can hook to the
@@ -23,7 +23,7 @@ x.b = 'Globe'
 x.react('off')
 ~~~
 
-## Bubbling ##
+## Bubbling
 React has a bubbling concept just like the DOM. Changes deep in an
 object bubble up to the root where you first installed react. You can
 also set up hierarchies so that multiple callbacks are fired.
@@ -41,7 +41,7 @@ x.nested.react('before after',
 x.nested.a = 'Hello World' //fires both callbacks above, deep.nested first
 ~~~
 
-# Limitations #
+## Limitations
 React only works on attributes, whether string, object, number, or
 array, not on functions inside objects.
 
@@ -57,13 +57,14 @@ x.react() //refresh any proxying
 x.c = 'Hot Stuff!'
 ~~~ 
 
-## Internet Explorer 8 ##
+## Internet Explorer 8 
 The 'broken' DOM only IE implementation of `Object.defineProperty` will
 need a polyfill to shim it up. Take a peek at
 [es5-shim](https://github.com/kriskowal/es5-shim). I didn't include this
 directly as you may have a different preference in polyfill, or just
 plain not need to mess with IE8 if you are making a mobile application.
 
+## Notes
 I've coded this up in CoffeeScript, which is really just a personal
 preference, but you can just use the react.min.js in the root of the
 repository.
